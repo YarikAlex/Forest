@@ -61,10 +61,50 @@ private:
                                    "house CHAR(20),"
                                    "site CHAR(50));";
 
-    QString _tableMossDeliveryQuery;
-    QString _tableStabilizedPlantsDeliveryQuery;
-    QString _tableArtificialPlantsDeliveryQuery;
-    QString _tableDecorationsDeliveryQuery;
+    QString _tableMossDeliveryQuery = "CREATE TABLE mossDelivery ("
+                                      "id_moss INTEGER,"
+                                      "id_supp INTEGER,"
+                                      "price DOUBLE NOT NULL,"
+                                      "number INTEGER NOT NULL,"
+                                      "CONSTRAINT new_pk PRIMARY KEY (id_moss, id_supp),"
+                                      "FOREIGN KEY (id_moss) REFERENCES moss (id)"
+                                      "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
+
+    QString _tableStabilizedPlantsDeliveryQuery = "CREATE TABLE stabPlantsDelivery ("
+                                                  "id_stab INTEGER,"
+                                                  "id_supp INTEGER,"
+                                                  "price DOUBLE NOT NULL,"
+                                                  "number INTEGER NOT NULL,"
+                                                  "CONSTRAINT new_pk PRIMARY KEY (id_stab, id_supp),"
+                                                  "FOREIGN KEY (id_stab) REFERENCES stabPlants (id)"
+                                                  "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
+
+    QString _tableArtificialPlantsDeliveryQuery = "CREATE TABLE artPlantsDelivery ("
+                                                  "id_art INTEGER,"
+                                                  "id_supp INTEGER,"
+                                                  "price DOUBLE NOT NULL,"
+                                                  "number INTEGER NOT NULL,"
+                                                  "CONSTRAINT new_pk PRIMARY KEY (id_art, id_supp),"
+                                                  "FOREIGN KEY (id_art) REFERENCES artPlants (id)"
+                                                  "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
+
+    QString _tableBasesDeliveryQuery = "CREATE TABLE basesDelivery ("
+                                       "id_base INTEGER,"
+                                       "id_supp INTEGER,"
+                                       "price DOUBLE NOT NULL,"
+                                       "number INTEGER NOT NULL,"
+                                       "CONSTRAINT new_pk PRIMARY KEY (id_base, id_supp),"
+                                       "FOREIGN KEY (id_base) REFERENCES bases (id)"
+                                       "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
+
+    QString _tableDecorationsDeliveryQuery = "CREATE TABLE decorationsDelivery ("
+                                             "id_decor INTEGER,"
+                                             "id_supp INTEGER,"
+                                             "price DOUBLE NOT NULL,"
+                                             "number INTEGER NOT NULL,"
+                                             "CONSTRAINT new_pk PRIMARY KEY (id_decor, id_supp),"
+                                             "FOREIGN KEY (id_decor) REFERENCES decorations (id)"
+                                             "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
 
 
 };

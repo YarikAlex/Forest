@@ -53,7 +53,12 @@ bool DataBase::restoreDatabase()
            !this->createTable(_tableArtificialPlantsQuery) ||
            !this->createTable(_tableBasesQuery) ||
            !this->createTable(_tableDecorationsQuery) ||
-           !this->createTable(_tableSuppliersQuery))
+           !this->createTable(_tableSuppliersQuery) ||
+           !this->createTable(_tableMossDeliveryQuery) ||
+           !this->createTable(_tableStabilizedPlantsDeliveryQuery) ||
+           !this->createTable(_tableArtificialPlantsDeliveryQuery) ||
+           !this->createTable(_tableBasesDeliveryQuery) ||
+           !this->createTable(_tableDecorationsDeliveryQuery))
         {
             return false;
         }
