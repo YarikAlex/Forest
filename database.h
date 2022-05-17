@@ -7,6 +7,8 @@
 #include <QSqlError>
 #include <QDebug>
 #include <QFile>
+#include <vector>
+#include <utility>
 
 class DataBase : public QObject
 {
@@ -16,15 +18,23 @@ public:
     ~DataBase();
 
     void connectDataBase();
-    bool insertData(const QString& table, const QString &data);
+    bool insertData(const QString &table, const QString &name, const QString &expense);
+    QStringList getType();
+    QStringList chooseMaterials(const QString& text);
 
 private:
     QSqlDatabase _database;
+    std::vector<std::pair<QString, QString>> _typeList {{"moss", tr("Мхи")},
+                                         {"stabPlants", tr("Стабилизированные")},
+                                         {"artPlants", tr("Искуственные")},
+                                         {"bases", tr("Основания")},
+                                         {"decorations", tr("Украшения")}};
 
     bool createTable(const QString& table);
     bool openDataBase();
     bool restoreDatabase();
     void closeDataBase();
+    QString findTypeTable(const QString &text);
 
     QString _tableMossQuery = "CREATE TABLE moss ("
                               "id INTEGER PRIMARY KEY AUTOINCREMENT,"

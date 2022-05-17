@@ -1,4 +1,5 @@
 #include "database.h"
+//#include <QMessageBox>
 
 DataBase::DataBase(QObject *parent) : QObject{parent} {}
 
@@ -15,6 +16,49 @@ void DataBase::connectDataBase()
     {
         this->openDataBase();
     }
+}
+
+bool DataBase::insertData(const QString &table, const QString &name, const QString &expense)
+{
+    QSqlQuery query;
+    QString data = "INSERT INTO " + findTypeTable(table) + "(name, expenses) VALUES (:Name, :Expense)";
+    query.prepare(data);
+    query.bindValue(":Name", name);
+    query.bindValue(":Expense", expense.toDouble());
+    if(!query.exec())
+    {
+        qDebug() << "DataBase: error insert into table " << table;
+        qDebug() << query.lastError().text();
+        return false;
+    }
+    else
+    {
+        qDebug() << "DataBase: data into " << table << " successfully added.";
+        return true;
+    }
+    return false;
+}
+
+QStringList DataBase::getType()
+{
+    QStringList types;
+    for(auto iter: _typeList)
+    {
+        types.push_back(iter.second);
+    }
+    return types;
+}
+
+QStringList DataBase::chooseMaterials(const QString &text)
+{
+    QSqlQuery query("SELECT name FROM " + findTypeTable(text));
+    QStringList materialsList;
+    while(query.next())
+    {
+        QString name = query.value(0).toString();
+        materialsList.push_back(name);
+    }
+    return materialsList;
 }
 
 //private metods
@@ -73,4 +117,14 @@ bool DataBase::restoreDatabase()
 void DataBase::closeDataBase()
 {
     _database.close();
+}
+
+QString DataBase::findTypeTable(const QString& text)
+{
+    for(auto iter: _typeList)
+    {
+        if(text == iter.second)
+            return iter.first;
+    }
+    return QString {};
 }
