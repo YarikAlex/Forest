@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSqlTableModel>
 #include "database.h"
+#include "addnewmaterial.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -17,8 +18,14 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_pushButton_3_clicked();
+    void on_newProject_triggered();
+    void on_addNewMaterialDB_clicked();
+    void addNewMaterialDB(const QString& type, const QString& name, const QString& expense);
+
 private:
     Ui::MainWindow  *ui;
-    DataBase        *db;
+    DataBase        *_db;
 };
 #endif // MAINWINDOW_H
