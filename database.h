@@ -115,8 +115,6 @@ private:
                                              "CONSTRAINT new_pk PRIMARY KEY (id_decor, id_supp),"
                                              "FOREIGN KEY (id_decor) REFERENCES decorations (id)"
                                              "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
-
-
 };
 
 #endif // DATABASE_H

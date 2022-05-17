@@ -1,5 +1,4 @@
 #include "database.h"
-//#include <QMessageBox>
 
 DataBase::DataBase(QObject *parent) : QObject{parent} {}
 
