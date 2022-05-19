@@ -17,7 +17,7 @@ void DataBase::connectDataBase()
     }
 }
 
-bool DataBase::insertData(const QString &table, const QString &name, const QString &expense)
+bool DataBase::insertMaterialData(const QString &table, const QString &name, const QString &expense)
 {
     QSqlQuery query;
     QString data = "INSERT INTO " + findTypeTable(table) + "(name, expenses) VALUES (:Name, :Expense)";
@@ -33,6 +33,33 @@ bool DataBase::insertData(const QString &table, const QString &name, const QStri
     else
     {
         qDebug() << "DataBase: data into " << table << " successfully added.";
+        return true;
+    }
+    return false;
+}
+
+bool DataBase::insertSupplierData(std::vector<QString>& supplier) const
+{
+    QSqlQuery query;
+    QString data = "INSERT INTO suppliers (surname, name, phone, city, street, house, site)"
+                   "VALUES(:SURNAME, :NAME, :PHONE, :CITY, :STREET, :HOUSE, :SITE)";
+    query.prepare(data);
+    query.bindValue(":SURNAME", supplier[0]);
+    query.bindValue(":NAME", supplier[1]);
+    query.bindValue(":PHONE", supplier[2]);
+    query.bindValue(":CITY", supplier[3]);
+    query.bindValue(":STREET", supplier[4]);
+    query.bindValue(":HOUSE", supplier[5]);
+    query.bindValue(":SITE", supplier[6]);
+    if(!query.exec())
+    {
+        qDebug() << "DataBase: error insert into table suppliers";
+        qDebug() << query.lastError().text();
+        return false;
+    }
+    else
+    {
+        qDebug() << "DataBase: data into suppliers successfully added.";
         return true;
     }
     return false;

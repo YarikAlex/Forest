@@ -13,18 +13,21 @@ SOURCES += \
     database.cpp \
     main.cpp \
     mainwindow.cpp \
-    project.cpp
+    project.cpp \
+    supplier.cpp
 
 HEADERS += \
     addnewmaterial.h \
     database.h \
     mainwindow.h \
-    project.h
+    project.h \
+    supplier.h
 
 FORMS += \
     addSupplier.ui \
     addnewmaterial.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    supplier.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

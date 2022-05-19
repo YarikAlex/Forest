@@ -23,6 +23,9 @@ private slots:
     void on_newProject_triggered();
     void on_addNewMaterialDB_clicked();
     void addNewMaterialDB(const QString& type, const QString& name, const QString& expense);
+    void addNewSupplierDB(std::vector<QString>&);
+
+    void on_btn_addSupplier_clicked();
 
 private:
     Ui::MainWindow  *ui;

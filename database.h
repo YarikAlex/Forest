@@ -10,6 +10,7 @@
 #include <vector>
 #include <utility>
 
+
 class DataBase : public QObject
 {
     Q_OBJECT
@@ -18,7 +19,8 @@ public:
     ~DataBase();
 
     void connectDataBase();
-    bool insertData(const QString &table, const QString &name, const QString &expense);
+    bool insertMaterialData(const QString &table, const QString &name, const QString &expense);
+    bool insertSupplierData(std::vector<QString> &supplier)const;
     QStringList getType();
     QStringList chooseMaterials(const QString& text);
 
