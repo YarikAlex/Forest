@@ -19,3 +19,8 @@ void addNewMaterial::on_addButton_clicked()
     emit getNewMaterial(ui->ui_typeMaterial->currentText(), ui->ui_materialName->text(), ui->ui_expenseMaterial->text());
     this->close();
 }
+
+void addNewMaterial::on_cancelButton_clicked()
+{
+    this->close();
+}

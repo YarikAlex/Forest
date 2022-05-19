@@ -17,10 +17,12 @@ public:
     ~addNewMaterial();
 
 signals:
-    void getNewMaterial(QString type, QString name, QString expenses);
+    void getNewMaterial(const QString& type, const QString& name, const QString& expenses);
 
 private slots:
     void on_addButton_clicked();
+
+    void on_cancelButton_clicked();
 
 private:
     Ui::addNewMaterial *ui;
