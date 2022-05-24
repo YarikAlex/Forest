@@ -28,57 +28,6 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <item>
-       <widget class="QPushButton" name="addNewMaterialDB">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Добавить
-материал</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_addSupplier">
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
-          <horstretch>0</horstretch>
-          <verstretch>0</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="text">
-         <string>Добавить
-поставщика</string>
-        </property>
-        <property name="autoDefault">
-         <bool>false</bool>
-        </property>
-        <property name="default">
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-     </layout>
-    </item>
-    <item row="1" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -133,7 +82,7 @@
          <enum>Qt::Vertical</enum>
         </property>
        </widget>
-       <widget class="QPushButton" name="pushButton_3">
+       <widget class="QPushButton" name="btn_newProject">
         <property name="geometry">
          <rect>
           <x>450</x>
@@ -169,28 +118,6 @@
    <property name="defaultUp">
     <bool>false</bool>
    </property>
-   <widget class="QMenu" name="menuFile">
-    <property name="title">
-     <string>Файл</string>
-    </property>
-    <addaction name="separator"/>
-    <addaction name="newProject"/>
-    <addaction name="separator"/>
-    <addaction name="saveProject"/>
-    <addaction name="loadProject"/>
-    <addaction name="separator"/>
-    <addaction name="separator"/>
-    <addaction name="quit"/>
-   </widget>
-   <widget class="QMenu" name="menuEdit">
-    <property name="title">
-     <string>Правка</string>
-    </property>
-    <addaction name="addMaterial"/>
-    <addaction name="addSupplier"/>
-   </widget>
-   <addaction name="menuFile"/>
-   <addaction name="menuEdit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="newProject">

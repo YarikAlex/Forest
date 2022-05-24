@@ -19,16 +19,20 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_3_clicked();
-    void on_newProject_triggered();
-    void on_addNewMaterialDB_clicked();
+    void on_newProject();
+    void on_Quit();
+    void on_addMaterial();
     void addNewMaterialDB(const QString& type, const QString& name, const QString& expense);
     void addNewSupplierDB(std::vector<QString>&);
-
-    void on_btn_addSupplier_clicked();
+    void on_addSupplier();
+    void on_materialTable();
+    void on_supplierTable();
 
 private:
     Ui::MainWindow  *ui;
     DataBase        *_db;
+    void createFileMenu();
+    void createEditMenu();
+    void createTableMenu();
 };
 #endif // MAINWINDOW_H
