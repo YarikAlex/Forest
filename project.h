@@ -9,6 +9,9 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QStringList>
+#include <QSpacerItem>
+#include <QScrollArea>
+#include <QWidget>
 #include "database.h"
 
 class Project : public QWidget
@@ -17,11 +20,12 @@ class Project : public QWidget
 public:
     Project(DataBase *dataBase, QWidget *parent = nullptr);
 private:
-    QWidget *_window;
-    QHBoxLayout *_mainLayout;
-    QVBoxLayout *_leftLayout;
-    QVBoxLayout *_rightLayout;
+    QVBoxLayout *_layoutWidget;
     DataBase *_dataBase;
+    QSpacerItem *_spacer;
+    QScrollArea *_area;
+    QWidget *_wdg;
+    int _areaWidth = 0;
 
     QComboBox *_typeBox, *_materialBox;
     QLineEdit *_numberLine, *_costLine, *_coeffLine, *_primeCostLine, *_totalCostLine;
@@ -29,13 +33,14 @@ private:
     QLabel *_coefficientLabel, *_primeCostLabel, *_totalCostLabel;
     QPushButton *_addNewMaterial;
 
-    QHBoxLayout* createTitleLine(QWidget *parent);
-    QHBoxLayout* createMaterialsLine(QWidget *parent);
+    void createTitleLine();
+    void createMaterialsLine();
     QVBoxLayout* createResultBox(QWidget *parent);
     QStringList chooseMaterials(const QString &type);
 
 private slots:
-    void typeBox_currentTextChanged(const QString text);
+    void typeBoxCurrentTextChanged(const QString& text);
+    void onBtnAddMaterials();
 
 signals:
 
