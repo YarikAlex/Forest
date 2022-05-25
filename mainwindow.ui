@@ -6,15 +6,21 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>1000</width>
     <height>600</height>
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>1000</width>
+    <height>600</height>
+   </size>
   </property>
   <property name="mouseTracking">
    <bool>true</bool>
@@ -136,8 +142,8 @@
        <widget class="QPushButton" name="pushButton_3">
         <property name="geometry">
          <rect>
-          <x>450</x>
-          <y>50</y>
+          <x>560</x>
+          <y>60</y>
           <width>101</width>
           <height>41</height>
          </rect>
@@ -162,7 +168,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>1000</width>
      <height>21</height>
     </rect>
    </property>
