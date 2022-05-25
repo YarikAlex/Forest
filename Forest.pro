@@ -24,7 +24,6 @@ HEADERS += \
     supplier.h
 
 FORMS += \
-    addSupplier.ui \
     addnewmaterial.ui \
     mainwindow.ui \
     supplier.ui
