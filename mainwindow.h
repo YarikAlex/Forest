@@ -20,6 +20,8 @@ public:
 
 private slots:
     void on_newProject();
+    void on_openProject();
+    void on_saveProject();
     void on_Quit();
     void on_addMaterial();
     void addNewMaterialDB(const QString& type, const QString& name, const QString& expense);
@@ -27,6 +29,7 @@ private slots:
     void on_addSupplier();
     void on_materialTable();
     void on_supplierTable();
+    void on_tabCloseRequested(int index);
 
 private:
     Ui::MainWindow  *ui;

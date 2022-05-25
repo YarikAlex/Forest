@@ -7,6 +7,7 @@
 #include <QSpacerItem>
 #include <QToolBar>
 #include <QAction>
+#include <QMessageBox>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -22,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent)
     _db->connectDataBase();
 
     connect(ui->btn_newProject, &QPushButton::clicked, this, &MainWindow::on_newProject);
+    connect(ui->tabWidget, &QTabWidget::tabCloseRequested, this, &MainWindow::on_tabCloseRequested);
 }
 
 MainWindow::~MainWindow()
@@ -36,9 +38,38 @@ void MainWindow::on_newProject()
     ui->tabWidget->setCurrentIndex(ui->tabWidget->count()-1);
 }
 
+void MainWindow::on_openProject()
+{
+
+}
+
+void MainWindow::on_saveProject()
+{
+
+}
+
 void MainWindow::on_Quit()
 {
-    this->close();
+    QMessageBox saveRequestBox;
+    saveRequestBox.setText(tr("Do you want to save your projects?"));
+    saveRequestBox.setStandardButtons(QMessageBox::StandardButton::Save | QMessageBox::StandardButton::Discard | QMessageBox::StandardButton::Cancel);
+    saveRequestBox.setDefaultButton(QMessageBox::Save);
+    int req = saveRequestBox.exec();
+    switch(req)
+    {
+        case QMessageBox::StandardButton::Save:
+            this->statusBar()->showMessage(tr("Project saved"));
+        break;
+        case QMessageBox::StandardButton::Cancel:
+            this->statusBar()->showMessage(tr("The save has been cancelled"));
+        break;
+        case QMessageBox::StandardButton::Discard:
+            this->close();
+        break;
+        default:
+            qDebug()<< "Ups";
+        break;
+    }
 }
 
 void MainWindow::on_addMaterial()
@@ -75,28 +106,38 @@ void MainWindow::addNewSupplierDB(std::vector<QString> &supplier)
     _db->insertSupplierData(supplier);
 }
 
+void MainWindow::on_tabCloseRequested(int index)
+{
+    ui->tabWidget->removeTab(index);
+}
+
 void MainWindow::createFileMenu()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileTool = new QToolBar(tr("File"), this);
 
-    QAction *newFileAction = new QAction(tr("&New"), this);
+    const QIcon newFileIcon = QIcon::fromTheme("projectTheme", QIcon(":/images/newProjectIcon.png"));
+    QAction *newFileAction = new QAction(newFileIcon, tr("&New"), this);
     newFileAction->setShortcut(QKeySequence::New);
-    newFileAction->setStatusTip(tr("Create new file"));
+    newFileAction->setStatusTip(tr("Create new project"));
     connect(newFileAction, &QAction::triggered, this, &MainWindow::on_newProject);
     fileMenu->addAction(newFileAction);
     fileMenu->addSeparator();
     fileTool->addAction(newFileAction);
 
-    QAction *openFileAction = new QAction (tr("&Open"), this);
+    const QIcon openFileIcon = QIcon::fromTheme("projectTheme", QIcon(":/images/openProjectIcon.png"));
+    QAction *openFileAction = new QAction (openFileIcon, tr("&Open"), this);
     openFileAction->setShortcut(QKeySequence::Open);
-    openFileAction->setStatusTip(tr("Open existing file"));
+    openFileAction->setStatusTip(tr("Open existing project"));
+    connect(openFileAction, &QAction::triggered, this, &MainWindow::on_openProject);
     fileMenu->addAction(openFileAction);
     fileTool->addAction(openFileAction);
 
-    QAction *saveFileAction = new QAction(tr("&Save"), this);
+    const QIcon saveFileIcon = QIcon::fromTheme("projectTheme", QIcon(":/images/saveProjectIcon.png"));
+    QAction *saveFileAction = new QAction(saveFileIcon, tr("&Save"), this);
     saveFileAction->setShortcut(QKeySequence::Save);
     saveFileAction->setStatusTip(tr("Save the project to disk"));
+    connect(saveFileAction, &QAction::triggered, this, &MainWindow::on_saveProject);
     fileMenu->addAction(saveFileAction);
     fileMenu->addSeparator();
     fileTool->addAction(saveFileAction);
