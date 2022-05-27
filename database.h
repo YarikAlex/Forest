@@ -23,6 +23,7 @@ public:
     bool insertSupplierData(std::vector<QString> &supplier)const;
     QStringList getType();
     QStringList chooseMaterials(const QString& text);
+    double getExpense(const QString& table, const QString& material);
 
 private:
     QSqlDatabase _database;

@@ -68,7 +68,7 @@ bool DataBase::insertSupplierData(std::vector<QString>& supplier) const
 QStringList DataBase::getType()
 {
     QStringList types;
-    for(auto iter: _typeList)
+    for(auto &iter: _typeList)
     {
         types.push_back(iter.second);
     }
@@ -85,6 +85,15 @@ QStringList DataBase::chooseMaterials(const QString &text)
         materialsList.push_back(name);
     }
     return materialsList;
+}
+
+double DataBase::getExpense(const QString &table, const QString &material)
+{
+    QSqlQuery query("SELECT expenses FROM " + findTypeTable(table) + " WHERE name = '" + material + "';");
+    double result = 0;
+    if(query.next())
+        result = query.value(0).toDouble();
+    return result;
 }
 
 //private metods
@@ -147,7 +156,7 @@ void DataBase::closeDataBase()
 
 QString DataBase::findTypeTable(const QString& text)
 {
-    for(auto iter: _typeList)
+    for(auto &iter: _typeList)
     {
         if(text == iter.second)
             return iter.first;
