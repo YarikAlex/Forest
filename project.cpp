@@ -37,48 +37,51 @@ Project::Project(DataBase* dataBase, QWidget *parent)
 
 void Project::createTitleLine()
 {
-    int count = 0;
+    uint count = 0;
+    const ushort shift = 5;
     _typeLabel = new QLabel(this);
     _typeLabel->setGeometry(10, 5, 130, 25);
     _typeLabel->setText(tr("Тип"));
-    count = count + _typeLabel->x() + _typeLabel->geometry().width();
+    count = count + _typeLabel->x() + _typeLabel->geometry().width()+shift;
 
     _materialLabel = new QLabel(this);
-    _materialLabel->setGeometry(count+5, 5, 150, 25);
+    _materialLabel->setGeometry(count, 5, 100, 25);
     _materialLabel->setText(tr("Материал"));
-    count = count + _materialLabel->geometry().width();
+    count = count + _materialLabel->geometry().width()+shift;
 
-    _numberLabel = new QLabel(this);
-    _numberLabel->setGeometry(count+10, 5, 100, 25);
-    _numberLabel->setText(tr("Количество"));
-    count = count + _numberLabel->geometry().width();
+    _areaLabel = new QLabel(this);
+    _areaLabel->setGeometry(count, 5, 80, 25);
+    _areaLabel->setText(tr("Площадь"));
+    count = count + _areaLabel->geometry().width()+shift;
 
-    _costLabel = new QLabel(this);
-    _costLabel->setGeometry(count+15, 5, 100, 25);
-    _costLabel->setText(tr("Cтоимость"));
+    _priceLable = new QLabel(this);
+    _priceLable->setGeometry(count, 5, 80, 25);
+    _priceLable->setText(tr("Цена"));
 }
 
 void Project::createMaterialsLine()
 {
+    ushort shift = 5;
     _typeBox = new QComboBox(this);
-    _typeBox->setGeometry(_typeLabel->x(), _typeLabel->geometry().height() + 5,
+    _typeBox->setGeometry(_typeLabel->x(), _typeLabel->geometry().height() + shift,
                           _typeLabel->geometry().width(), _typeLabel->geometry().height());
     _typeBox->addItems(_dataBase->getType());
 
     _materialBox = new QComboBox(this);
-    _materialBox->setGeometry(_materialLabel->x(), _materialLabel->geometry().height() + 5,
+    _materialBox->setGeometry(_materialLabel->x(), _materialLabel->geometry().height() + shift,
                               _materialLabel->geometry().width(), _materialLabel->geometry().height());
     _materialBox->addItems(chooseMaterials(_typeBox->currentText()));
 
-    _numberLine = new QLineEdit(this);
-    _numberLine->setGeometry(_numberLabel->x(), _numberLabel->geometry().height()+5, 100, 25);
+    _areaLine = new QLineEdit(this);
+    _areaLine->setGeometry(_areaLabel->x(), _areaLabel->geometry().height()+shift,
+                           _areaLabel->geometry().width(), _areaLabel->geometry().height());
 
-    _costLine = new QLineEdit(this);
-    _costLine->setGeometry(_costLabel->x(), _costLabel->geometry().height()+5, 100, 25);
-    _costLine->setReadOnly(true);
+    _priceLine = new QLineEdit(this);
+    _priceLine->setGeometry(_priceLable->x(), _priceLable->geometry().height()+shift,
+                            _priceLable->geometry().width(), _priceLable->geometry().height());
 
     _addNewMaterial = new QPushButton(this);
-    _addNewMaterial->setGeometry(_costLine->x()+_costLine->geometry().width()+5, _costLine->y(), 30, 25);
+    _addNewMaterial->setGeometry(_priceLine->x()+_priceLine->geometry().width()+shift, _priceLine->y(), 30, 25);
     _addNewMaterial->setText("+");
     _areaWidth = _addNewMaterial->x() + _addNewMaterial->geometry().width();
 }
@@ -130,6 +133,9 @@ void Project::typeBoxCurrentTextChanged(const QString &text)
 
 void Project::onBtnAddMaterials()
 {
+    //Запрос в БД на получение расхода
+    double expence = _dataBase->getExpense(_typeBox->currentText(), _materialBox->currentText());
+
     QHBoxLayout *innerLayout = new QHBoxLayout();
     innerLayout->setAlignment(Qt::AlignLeft);
 
@@ -143,10 +149,20 @@ void Project::onBtnAddMaterials()
     QLabel *material = new QLabel(_materialBox->currentText());
     innerLayout->addWidget(material);
 
-    QLabel *number = new QLabel(_numberLine->text());
+    QLabel *number = new QLabel(_areaLine->text() + " м2");
     innerLayout->addWidget(number);
 
-    QPushButton *btnDelete = new QPushButton("Delete");
+    QLabel *weight = new QLabel(QString::number(_areaLine->text().toDouble() * expence) + " кг");
+    innerLayout->addWidget(weight);
+
+    QLabel *price = new QLabel(_priceLine->text() + " руб.");
+    innerLayout->addWidget(price);
+
+    QLabel *cost = new QLabel(QString::number((_areaLine->text().toDouble() * expence) * _priceLine->text().toDouble()) + " руб.");
+    innerLayout->addWidget(cost);
+
+    QPushButton *btnDelete = new QPushButton("-");
+    btnDelete->setFixedWidth(30);
     innerLayout->addWidget(btnDelete);
 
     _layoutWidget->insertLayout(_layoutWidget->count()-1, innerLayout);

@@ -28,8 +28,8 @@ private:
     int _areaWidth = 0;
 
     QComboBox *_typeBox, *_materialBox;
-    QLineEdit *_numberLine, *_costLine, *_coeffLine, *_primeCostLine, *_totalCostLine;
-    QLabel *_typeLabel, *_materialLabel, *_numberLabel, *_costLabel;
+    QLineEdit *_areaLine, *_priceLine, *_costLine, *_coeffLine, *_primeCostLine, *_totalCostLine;
+    QLabel *_typeLabel, *_materialLabel, *_areaLabel,*_priceLable, *_costLabel;
     QLabel *_coefficientLabel, *_primeCostLabel, *_totalCostLabel;
     QPushButton *_addNewMaterial;
 
