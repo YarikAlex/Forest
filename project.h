@@ -37,7 +37,7 @@ private:
 
     void createTitleLine();
     void createMaterialsLine();
-    void createResultBox();
+    void createResultLine();
     QStringList chooseMaterials(const QString &type);
 
 private slots:

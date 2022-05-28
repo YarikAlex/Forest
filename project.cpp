@@ -8,7 +8,7 @@ Project::Project(DataBase* dataBase, QWidget *parent)
 {
     createTitleLine();
     createMaterialsLine();
-    createResultBox();
+    createResultLine();
 
     _area = new QScrollArea(this);
     _area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -80,7 +80,7 @@ void Project::createMaterialsLine()
     _areaWidth = _addNewMaterial->x() + _addNewMaterial->geometry().width();
 }
 
-void Project::createResultBox()
+void Project::createResultLine()
 {
      uint position = _priceLable->x()+200;
      ushort shift = 5;
