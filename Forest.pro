@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     addnewmaterial.cpp \
+    calculator.cpp \
     database.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -18,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     addnewmaterial.h \
+    calculator.h \
     database.h \
     mainwindow.h \
     project.h \

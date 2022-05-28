@@ -8,6 +8,7 @@ Project::Project(DataBase* dataBase, QWidget *parent)
 {
     createTitleLine();
     createMaterialsLine();
+    createResultBox();
 
     _area = new QScrollArea(this);
     _area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -24,38 +25,31 @@ Project::Project(DataBase* dataBase, QWidget *parent)
     _layoutWidget->addSpacerItem(_spacer);
     _wdg->setLayout(_layoutWidget);
 
-
-    //_rightLayout = new QVBoxLayout(this);
-    //_rightLayout->addLayout(createResultBox(this));
-    //_mainLayout->addLayout(_leftLayout);
-    //_mainLayout->addSpacing(50);
-    //_mainLayout->addLayout(_rightLayout);
-
     connect(_typeBox, &QComboBox::currentTextChanged, this, &Project::typeBoxCurrentTextChanged);
     connect(_addNewMaterial, &QPushButton::clicked, this, &Project::onBtnAddMaterials);
 }
 
 void Project::createTitleLine()
 {
-    uint count = 0;
+    uint position = 0;
     const ushort shift = 5;
     _typeLabel = new QLabel(this);
-    _typeLabel->setGeometry(10, 5, 130, 25);
+    _typeLabel->setGeometry(10, 5, 150, 25);
     _typeLabel->setText(tr("Тип"));
-    count = count + _typeLabel->x() + _typeLabel->geometry().width()+shift;
+    position = position + _typeLabel->x() + _typeLabel->geometry().width()+shift;
 
     _materialLabel = new QLabel(this);
-    _materialLabel->setGeometry(count, 5, 100, 25);
+    _materialLabel->setGeometry(position, 5, 150, 25);
     _materialLabel->setText(tr("Материал"));
-    count = count + _materialLabel->geometry().width()+shift;
+    position = position + _materialLabel->geometry().width()+shift;
 
     _areaLabel = new QLabel(this);
-    _areaLabel->setGeometry(count, 5, 80, 25);
+    _areaLabel->setGeometry(position, 5, 80, 25);
     _areaLabel->setText(tr("Площадь"));
-    count = count + _areaLabel->geometry().width()+shift;
+    position = position + _areaLabel->geometry().width()+shift;
 
     _priceLable = new QLabel(this);
-    _priceLable->setGeometry(count, 5, 80, 25);
+    _priceLable->setGeometry(position, 5, 80, 25);
     _priceLable->setText(tr("Цена"));
 }
 
@@ -86,37 +80,39 @@ void Project::createMaterialsLine()
     _areaWidth = _addNewMaterial->x() + _addNewMaterial->geometry().width();
 }
 
-QVBoxLayout *Project::createResultBox(QWidget *parent)
+void Project::createResultBox()
 {
-    QVBoxLayout *lineLayout = new QVBoxLayout(parent);
+     uint position = _priceLable->x()+200;
+     ushort shift = 5;
 
-    _coefficientLabel = new QLabel(this);
+    _koeffLabel = new QLabel(this);
+    _koeffLabel->setGeometry(position, _priceLable->y(), 100, 25);
+    _koeffLabel->setText(tr("Коэффициент"));
+    position += _koeffLabel->geometry().width()+shift;
+
     _primeCostLabel = new QLabel(this);
-    _totalCostLabel = new QLabel(this);
-    _coeffLine = new QLineEdit(this);
-    _primeCostLine = new QLineEdit(this);
-    _totalCostLine = new QLineEdit(this);
-
-    _coefficientLabel->setText(tr("Коэфф"));
-    _coefficientLabel->setFixedSize(50, 25);
+    _primeCostLabel->setGeometry(position, _priceLable->y(), 100, 25);
     _primeCostLabel->setText(tr("Себестоимость"));
-    _primeCostLabel->setFixedSize(100, 25);
-    _totalCostLabel->setText(tr("Стоимость"));
-    _totalCostLabel->setFixedSize(100, 25);
-    _coeffLine->setFixedSize(50, 25);
-    _primeCostLine->setFixedSize(100, 25);
+    position += _primeCostLabel->geometry().width()+shift;
+
+    _totalCostLabel = new QLabel(this);
+    _totalCostLabel->setGeometry(position, _priceLable->y(), 110, 25);
+    _totalCostLabel->setText(tr("Стоимость проекта"));
+
+    _koeffLine = new QLineEdit(this);
+    _koeffLine->setGeometry(_koeffLabel->x(), _koeffLabel->y()+30, 100, 25);
+
+    _primeCostLine = new QLineEdit(this);
+    _primeCostLine->setGeometry(_primeCostLabel->x(), _primeCostLabel->y()+30, 100, 25);
     _primeCostLine->setReadOnly(true);
-    _totalCostLine->setFixedSize(100, 25);
+    _primeCostLine->setText(QString::number(_calculator.GetPrimeCost()));
+
+    _totalCostLine = new QLineEdit(this);
+    _totalCostLine->setGeometry(_totalCostLabel->x(), _totalCostLabel->y()+30, 110, 25);
     _totalCostLine->setReadOnly(true);
+    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(_koeffLine->text().toDouble())));
 
-    lineLayout->addWidget(_coefficientLabel);
-    lineLayout->addWidget(_coeffLine);
-    lineLayout->addWidget(_primeCostLabel);
-    lineLayout->addWidget(_primeCostLine);
-    lineLayout->addWidget(_totalCostLabel);
-    lineLayout->addWidget(_totalCostLine);
-
-    return lineLayout;
+    connect(_koeffLine, &QLineEdit::textChanged, this, &Project::koeffLineTextChanged);
 }
 
 QStringList Project::chooseMaterials(const QString &type)
@@ -152,14 +148,16 @@ void Project::onBtnAddMaterials()
     QLabel *number = new QLabel(_areaLine->text() + " м2");
     innerLayout->addWidget(number);
 
-    QLabel *weight = new QLabel(QString::number(_areaLine->text().toDouble() * expence) + " кг");
+    QLabel *weight = new QLabel(QString::number(_calculator.CalcMaterialWeight(_areaLine->text().toDouble(), expence)) + " кг");
     innerLayout->addWidget(weight);
 
     QLabel *price = new QLabel(_priceLine->text() + " руб.");
     innerLayout->addWidget(price);
 
-    QLabel *cost = new QLabel(QString::number((_areaLine->text().toDouble() * expence) * _priceLine->text().toDouble()) + " руб.");
+    QLabel *cost = new QLabel(QString::number(_calculator.CalcMaterialCost(_areaLine->text().toDouble(), expence, _priceLine->text().toDouble())) + " руб.");
     innerLayout->addWidget(cost);
+    _primeCostLine->setText(QString::number(_calculator.GetPrimeCost()));
+    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(_koeffLine->text().toDouble())));
 
     QPushButton *btnDelete = new QPushButton("-");
     btnDelete->setFixedWidth(30);
@@ -167,5 +165,10 @@ void Project::onBtnAddMaterials()
 
     _layoutWidget->insertLayout(_layoutWidget->count()-1, innerLayout);
     _spacer->changeSize(10, _spacer->geometry().height() - type->geometry().height());
+}
+
+void Project::koeffLineTextChanged(const QString& newKoeff)
+{
+    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(newKoeff.toDouble())));
 }
 
