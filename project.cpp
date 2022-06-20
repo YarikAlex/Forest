@@ -13,7 +13,9 @@ Project::Project(DataBase* dataBase, QWidget *parent)
     _area = new QScrollArea(this);
     _area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     _area->setWidgetResizable(true);
-    _area->setGeometry(_typeBox->x(), _typeBox->geometry().height()+_typeLabel->geometry().height()+10, _areaWidth, 400);
+    leftPosition.setX(_typeBox->x());
+    leftPosition.setY(_typeBox->geometry().height()+_typeLabel->geometry().height()+2*shift);
+    _area->setGeometry(QRect{leftPosition, areaSize});
     _area->setBackgroundRole(QPalette::Light);
 
     _wdg = new QWidget();
@@ -31,93 +33,121 @@ Project::Project(DataBase* dataBase, QWidget *parent)
 
 void Project::createTitleLine()
 {
-    uint position = 0;
-    const ushort shift = 5;
     _typeLabel = new QLabel(this);
-    _typeLabel->setGeometry(10, 5, 150, 25);
-    _typeLabel->setText(tr("Тип"));
-    position = position + _typeLabel->x() + _typeLabel->geometry().width()+shift;
+    _typeLabel->setGeometry(QRect{leftPosition, comboboxSize});
+    _typeLabel->setText(tr("Type"));
+    _typeLabel->setAlignment(Qt::AlignHCenter);
+    leftPosition.setX(leftPosition.x() + _typeLabel->geometry().width() + shift);
 
     _materialLabel = new QLabel(this);
-    _materialLabel->setGeometry(position, 5, 150, 25);
-    _materialLabel->setText(tr("Материал"));
-    position = position + _materialLabel->geometry().width()+shift;
+    _materialLabel->setGeometry(QRect{leftPosition, comboboxSize});
+    _materialLabel->setText(tr("Material"));
+    _materialLabel->setAlignment(Qt::AlignHCenter);
+    leftPosition.setX(leftPosition.x() + _materialLabel->geometry().width() + shift);
 
     _areaLabel = new QLabel(this);
-    _areaLabel->setGeometry(position, 5, 80, 25);
-    _areaLabel->setText(tr("Площадь"));
-    position = position + _areaLabel->geometry().width()+shift;
+    _areaLabel->setGeometry(QRect{leftPosition, lineEditSize});
+    _areaLabel->setText(tr("Number"));
+    _areaLabel->setAlignment(Qt::AlignHCenter);
+    leftPosition.setX(leftPosition.x() + _areaLabel->geometry().width() + shift);
 
     _priceLable = new QLabel(this);
-    _priceLable->setGeometry(position, 5, 80, 25);
-    _priceLable->setText(tr("Цена"));
+    _priceLable->setGeometry(QRect{leftPosition, lineEditSize});
+    _priceLable->setText(tr("Price"));
+    _priceLable->setAlignment(Qt::AlignHCenter);
 }
 
 void Project::createMaterialsLine()
 {
-    ushort shift = 5;
+    leftPosition.setX(_typeLabel->x());
+    leftPosition.setY(_typeLabel->geometry().height() + shift);
     _typeBox = new QComboBox(this);
-    _typeBox->setGeometry(_typeLabel->x(), _typeLabel->geometry().height() + shift,
-                          _typeLabel->geometry().width(), _typeLabel->geometry().height());
+    _typeBox->setGeometry(QRect{leftPosition, comboboxSize});
     _typeBox->addItems(_dataBase->getType());
+    _typeBox->setPlaceholderText(tr("Type"));
 
+    leftPosition.setX(_materialLabel->x());
+    leftPosition.setY(_materialLabel->geometry().height() + shift);
     _materialBox = new QComboBox(this);
-    _materialBox->setGeometry(_materialLabel->x(), _materialLabel->geometry().height() + shift,
-                              _materialLabel->geometry().width(), _materialLabel->geometry().height());
+    _materialBox->setGeometry(QRect{leftPosition, comboboxSize});
     _materialBox->addItems(chooseMaterials(_typeBox->currentText()));
+    _materialBox->setPlaceholderText(tr("Material"));
 
+    leftPosition.setX(_areaLabel->x());
+    leftPosition.setY(_areaLabel->geometry().height()+shift);
     _areaLine = new QLineEdit(this);
-    _areaLine->setGeometry(_areaLabel->x(), _areaLabel->geometry().height()+shift,
-                           _areaLabel->geometry().width(), _areaLabel->geometry().height());
+    _areaLine->setGeometry(QRect{leftPosition, lineEditSize});
+    _areaLine->setAlignment(Qt::AlignHCenter);
+    _areaLine->setPlaceholderText(tr("Number"));
 
+    leftPosition.setX(_priceLable->x());
+    leftPosition.setY(_priceLable->geometry().height()+shift);
     _priceLine = new QLineEdit(this);
-    _priceLine->setGeometry(_priceLable->x(), _priceLable->geometry().height()+shift,
-                            _priceLable->geometry().width(), _priceLable->geometry().height());
+    _priceLine->setGeometry(QRect{leftPosition, lineEditSize});
+    _priceLine->setAlignment(Qt::AlignHCenter);
+    _priceLine->setPlaceholderText(tr("Price"));
 
+    leftPosition.setX(leftPosition.x() + _priceLine->geometry().width() + shift);
+    leftPosition.setY(_priceLine->y());
     _addNewMaterial = new QPushButton(this);
-    _addNewMaterial->setGeometry(_priceLine->x()+_priceLine->geometry().width()+shift, _priceLine->y(), 30, 25);
+    _addNewMaterial->setGeometry(QRect{leftPosition, addButtonSize});
     _addNewMaterial->setText("+");
-    _areaWidth = _addNewMaterial->x() + _addNewMaterial->geometry().width();
 }
 
 void Project::createResultLine()
 {
-     uint position = _priceLable->x()+200;
-     ushort shift = 5;
+    _indexLabel = new QLabel(this);
+    _indexLabel->setGeometry(QRect{rightPosition, lineEditSize});
+    _indexLabel->setText(tr("Index"));
+    _indexLabel->setAlignment(Qt::AlignHCenter);
 
-    _koeffLabel = new QLabel(this);
-    _koeffLabel->setGeometry(position, _priceLable->y(), 100, 25);
-    _koeffLabel->setText(tr("Коэффициент"));
-    position += _koeffLabel->geometry().width()+shift;
-
+    rightPosition.setX(rightPosition.x()+_indexLabel->geometry().width()+shift);
     _primeCostLabel = new QLabel(this);
-    _primeCostLabel->setGeometry(position, _priceLable->y(), 100, 25);
-    _primeCostLabel->setText(tr("Себестоимость"));
-    position += _primeCostLabel->geometry().width()+shift;
+    _primeCostLabel->setGeometry(QRect{rightPosition, lineEditSize});
+    _primeCostLabel->setText(tr("Prime cost"));
+    _primeCostLabel->setAlignment(Qt::AlignHCenter);
 
+    rightPosition.setX(rightPosition.x()+_primeCostLabel->geometry().width()+shift);
     _totalCostLabel = new QLabel(this);
-    _totalCostLabel->setGeometry(position, _priceLable->y(), 110, 25);
-    _totalCostLabel->setText(tr("Стоимость проекта"));
+    _totalCostLabel->setGeometry(QRect{rightPosition, lineEditSize});
+    _totalCostLabel->setText(tr("Total cost"));
+    _totalCostLabel->setAlignment(Qt::AlignHCenter);
 
-    _koeffLine = new QLineEdit(this);
-    _koeffLine->setGeometry(_koeffLabel->x(), _koeffLabel->y()+30, 100, 25);
+    rightPosition.setX(_indexLabel->x());
+    rightPosition.setY(_indexLabel->geometry().height()+shift);
+    _indexLine = new QLineEdit(this);
+    _indexLine->setGeometry(QRect{rightPosition, lineEditSize});
+    _indexLine->setAlignment(Qt::AlignHCenter);
+    _indexLine->setPlaceholderText(tr("Index"));
 
+    rightPosition.setX(_primeCostLabel->x());
+    rightPosition.setY(_primeCostLabel->geometry().height()+shift);
     _primeCostLine = new QLineEdit(this);
-    _primeCostLine->setGeometry(_primeCostLabel->x(), _primeCostLabel->y()+30, 100, 25);
+    _primeCostLine->setGeometry(QRect{rightPosition, lineEditSize});
     _primeCostLine->setReadOnly(true);
     _primeCostLine->setText(QString::number(_calculator.GetPrimeCost()));
+    _primeCostLine->setAlignment(Qt::AlignHCenter);
 
+    rightPosition.setX(_totalCostLabel->x());
+    rightPosition.setY(_totalCostLabel->geometry().height()+shift);
     _totalCostLine = new QLineEdit(this);
-    _totalCostLine->setGeometry(_totalCostLabel->x(), _totalCostLabel->y()+30, 110, 25);
+    _totalCostLine->setGeometry(QRect{rightPosition, lineEditSize});
     _totalCostLine->setReadOnly(true);
-    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(_koeffLine->text().toDouble())));
+    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(_indexLine->text().toDouble())));
+    _totalCostLine->setAlignment(Qt::AlignHCenter);
 
-    connect(_koeffLine, &QLineEdit::textChanged, this, &Project::koeffLineTextChanged);
+    connect(_indexLine, &QLineEdit::textChanged, this, &Project::indexLineTextChanged);
 }
 
 QStringList Project::chooseMaterials(const QString &type)
 {
     return _dataBase->chooseMaterials(type);
+}
+
+QString& Project::checkDot(QString &text)
+{
+    text.replace(_comma, _dot);
+    return text;
 }
 
 //slots
@@ -131,6 +161,9 @@ void Project::onBtnAddMaterials()
 {
     //Запрос в БД на получение расхода
     double expence = _dataBase->getExpense(_typeBox->currentText(), _materialBox->currentText());
+    QString areaText = _areaLine->text();
+    QString priceText = _priceLine->text();
+    QString indexText = _indexLine->text();
 
     QHBoxLayout *innerLayout = new QHBoxLayout();
     innerLayout->setAlignment(Qt::AlignLeft);
@@ -139,35 +172,35 @@ void Project::onBtnAddMaterials()
     innerLayout->addWidget(count);
 
     QLabel *type = new QLabel(_typeBox->currentText());
-    type->setFixedHeight(25);
+    type->setFixedHeight(addinfLableHeight);
     innerLayout->addWidget(type);
 
     QLabel *material = new QLabel(_materialBox->currentText());
     innerLayout->addWidget(material);
 
-    QLabel *number = new QLabel(_areaLine->text() + " м2");
+    QLabel *number = new QLabel(checkDot(areaText) + tr(" м2"));
     innerLayout->addWidget(number);
 
-    QLabel *weight = new QLabel(QString::number(_calculator.CalcMaterialWeight(_areaLine->text().toDouble(), expence)) + " кг");
+    QLabel *weight = new QLabel(QString::number(_calculator.CalcMaterialWeight(checkDot(areaText).toDouble(), expence)) + " кг");
     innerLayout->addWidget(weight);
 
-    QLabel *price = new QLabel(_priceLine->text() + " руб.");
+    QLabel *price = new QLabel(checkDot(priceText) + tr(" руб."));
     innerLayout->addWidget(price);
 
-    QLabel *cost = new QLabel(QString::number(_calculator.CalcMaterialCost(_areaLine->text().toDouble(), expence, _priceLine->text().toDouble())) + " руб.");
+    QLabel *cost = new QLabel(QString::number(_calculator.CalcMaterialCost(checkDot(areaText).toDouble(), expence, checkDot(priceText).toDouble())) + " руб.");
     innerLayout->addWidget(cost);
     _primeCostLine->setText(QString::number(_calculator.GetPrimeCost()));
-    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(_koeffLine->text().toDouble())));
+    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(checkDot(indexText).toDouble())));
 
     QPushButton *btnDelete = new QPushButton("-");
-    btnDelete->setFixedWidth(30);
+    btnDelete->setFixedWidth(addinfLableHeight);
     innerLayout->addWidget(btnDelete);
 
     _layoutWidget->insertLayout(_layoutWidget->count()-1, innerLayout);
-    _spacer->changeSize(10, _spacer->geometry().height() - type->geometry().height());
+    _spacer->changeSize(spacerWidth, _spacer->geometry().height() - type->geometry().height());
 }
 
-void Project::koeffLineTextChanged(const QString& newKoeff)
+void Project::indexLineTextChanged(const QString& newKoeff)
 {
     _totalCostLine->setText(QString::number(_calculator.GetTotalCost(newKoeff.toDouble())));
 }

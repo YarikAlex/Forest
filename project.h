@@ -12,6 +12,7 @@
 #include <QSpacerItem>
 #include <QScrollArea>
 #include <QWidget>
+#include <QRect>
 #include "database.h"
 #include "calculator.h"
 
@@ -27,23 +28,36 @@ private:
     QSpacerItem *_spacer;
     QScrollArea *_area;
     QWidget *_wdg;
-    int _areaWidth = 0;
 
     QComboBox *_typeBox, *_materialBox;
-    QLineEdit *_areaLine, *_priceLine, *_costLine, *_koeffLine, *_primeCostLine, *_totalCostLine;
+    QLineEdit *_areaLine, *_priceLine, *_costLine, *_indexLine, *_primeCostLine, *_totalCostLine;
     QLabel *_typeLabel, *_materialLabel, *_areaLabel,*_priceLable, *_costLabel;
-    QLabel *_koeffLabel, *_primeCostLabel, *_totalCostLabel;
+    QLabel *_indexLabel, *_primeCostLabel, *_totalCostLabel;
     QPushButton *_addNewMaterial;
+    QChar _dot = '.';
+    QChar _comma = ',';
 
     void createTitleLine();
     void createMaterialsLine();
     void createResultLine();
     QStringList chooseMaterials(const QString &type);
+    QString& checkDot(QString& text);
+
+    //размеры элементов
+    const ushort shift = 5;
+    const ushort addinfLableHeight = 25;
+    const ushort spacerWidth = 10;
+    QPoint leftPosition{10, 5};
+    QPoint rightPosition{600, 5};
+    QSize comboboxSize{150, 25};
+    QSize lineEditSize{60, 25};
+    QSize addButtonSize{30, 25};
+    QSize areaSize{550, 400};
 
 private slots:
     void typeBoxCurrentTextChanged(const QString& text);
     void onBtnAddMaterials();
-    void koeffLineTextChanged(const QString &);
+    void indexLineTextChanged(const QString &);
 
 signals:
 
