@@ -40,24 +40,26 @@ private:
     void createTitleLine();
     void createMaterialsLine();
     void createResultLine();
+    void createClientLine();
     QStringList chooseMaterials(const QString &type);
     QString& checkDot(QString& text);
 
     //размеры элементов
-    const ushort shift = 5;
-    const ushort addinfLableHeight = 25;
-    const ushort spacerWidth = 10;
-    QPoint leftPosition{10, 5};
-    QPoint rightPosition{600, 5};
-    QSize comboboxSize{150, 25};
-    QSize lineEditSize{60, 25};
-    QSize addButtonSize{30, 25};
-    QSize areaSize{550, 400};
+    const ushort _shift = 5;
+    const ushort _addinfLableHeight = 25;
+    const ushort _spacerWidth = 10;
+    QPoint _leftPosition{10, 5};
+    QPoint _rightPosition{600, 5};
+    QSize _comboboxSize{150, 25};
+    QSize _lineEditSize{60, 25};
+    QSize _addButtonSize{30, 25};
+    QSize _areaSize{550, 400};
 
 private slots:
     void typeBoxCurrentTextChanged(const QString& text);
     void onBtnAddMaterials();
     void indexLineTextChanged(const QString &);
+    void onDeleteButton();
 
 signals:
 
