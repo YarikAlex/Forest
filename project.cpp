@@ -2,13 +2,13 @@
 #include <QSqlQuery>
 #include <QDebug>
 
-
 Project::Project(DataBase* dataBase, QWidget *parent)
     : QWidget{parent}, _dataBase(dataBase)
 {
-    createTitleLine();
-    createMaterialsLine();
-    createResultLine();
+    CreateTitleLine();
+    CreateMaterialsLine();
+    CreateResultLine();
+    CreateClientLine();
 
     _area = new QScrollArea(this);
     _area->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
@@ -27,11 +27,13 @@ Project::Project(DataBase* dataBase, QWidget *parent)
     _layoutWidget->addSpacerItem(_spacer);
     _wdg->setLayout(_layoutWidget);
 
+
     connect(_typeBox, &QComboBox::currentTextChanged, this, &Project::typeBoxCurrentTextChanged);
     connect(_addNewMaterial, &QPushButton::clicked, this, &Project::onBtnAddMaterials);
+    connect(this, &Project::deleteMaterial, this, &Project::onSubtractMaterial);
 }
 
-void Project::createTitleLine()
+void Project::CreateTitleLine()
 {
     _typeLabel = new QLabel(this);
     _typeLabel->setGeometry(QRect{_leftPosition, _comboboxSize});
@@ -57,20 +59,20 @@ void Project::createTitleLine()
     _priceLable->setAlignment(Qt::AlignHCenter);
 }
 
-void Project::createMaterialsLine()
+void Project::CreateMaterialsLine()
 {
     _leftPosition.setX(_typeLabel->x());
     _leftPosition.setY(_typeLabel->geometry().height() + _shift);
     _typeBox = new QComboBox(this);
     _typeBox->setGeometry(QRect{_leftPosition, _comboboxSize});
-    _typeBox->addItems(_dataBase->getType());
+    _typeBox->addItems(_dataBase->GetType());
     _typeBox->setPlaceholderText(tr("Type"));
 
     _leftPosition.setX(_materialLabel->x());
     _leftPosition.setY(_materialLabel->geometry().height() + _shift);
     _materialBox = new QComboBox(this);
     _materialBox->setGeometry(QRect{_leftPosition, _comboboxSize});
-    _materialBox->addItems(chooseMaterials(_typeBox->currentText()));
+    _materialBox->addItems(ChooseMaterials(_typeBox->currentText()));
     _materialBox->setPlaceholderText(tr("Material"));
 
     _leftPosition.setX(_areaLabel->x());
@@ -94,7 +96,7 @@ void Project::createMaterialsLine()
     _addNewMaterial->setText("+");
 }
 
-void Project::createResultLine()
+void Project::CreateResultLine()
 {
     _indexLabel = new QLabel(this);
     _indexLabel->setGeometry(QRect{_rightPosition, _lineEditSize});
@@ -136,20 +138,31 @@ void Project::createResultLine()
     _totalCostLine->setText(QString::number(_calculator.GetTotalCost(_indexLine->text().toDouble())));
     _totalCostLine->setAlignment(Qt::AlignHCenter);
 
+    _rightPosition.setX(_indexLine->x());
+    _rightPosition.setY(_indexLine->y() + _lineEditSize.height() + _shift);
+
     connect(_indexLine, &QLineEdit::textChanged, this, &Project::indexLineTextChanged);
 }
 
-void Project::createClientLine()
+void Project::CreateClientLine()
 {
+    _projectName = new QLabel(this);
+    _projectName->setText(tr("Project name:"));
+    _projectName->setGeometry(QRect{_rightPosition, _comboboxSize});
+    _rightPosition.setX(_projectName->x());
+    _rightPosition.setY(_projectName->y() + _comboboxSize.height() + _shift);
 
+    _customerName = new QLabel(this);
+    _customerName->setText(tr("Customer: "));
+    _customerName->setGeometry(QRect{_rightPosition, _comboboxSize});
 }
 
-QStringList Project::chooseMaterials(const QString &type)
+QStringList Project::ChooseMaterials(const QString &type)
 {
-    return _dataBase->chooseMaterials(type);
+    return _dataBase->ChooseMaterials(type);
 }
 
-QString& Project::checkDot(QString &text)
+QString& Project::CheckDot(QString &text) const
 {
     text.replace(_comma, _dot);
     return text;
@@ -159,16 +172,16 @@ QString& Project::checkDot(QString &text)
 void Project::typeBoxCurrentTextChanged(const QString &text)
 {
     _materialBox->clear();
-    _materialBox->addItems(chooseMaterials(text));
+    _materialBox->addItems(ChooseMaterials(text));
 }
 
 void Project::onBtnAddMaterials()
 {
     //Запрос в БД на получение расхода
-    double expence = _dataBase->getExpense(_typeBox->currentText(), _materialBox->currentText());
+    double expence = _dataBase->GetExpense(_typeBox->currentText(), _materialBox->currentText());
     QString areaText = _areaLine->text();
     QString priceText = _priceLine->text();
-    QString indexText = _indexLine->text();
+    //QString indexText = _indexLine->text();
 
     QHBoxLayout *innerLayout = new QHBoxLayout();
     innerLayout->setAlignment(Qt::AlignLeft);
@@ -180,19 +193,20 @@ void Project::onBtnAddMaterials()
     QLabel *material = new QLabel(_materialBox->currentText());
     innerLayout->addWidget(material);
 
-    QLabel *number = new QLabel(checkDot(areaText) + tr(" м2"));
+    QLabel *number = new QLabel(CheckDot(areaText) + tr(" м2"));
     innerLayout->addWidget(number);
 
-    QLabel *weight = new QLabel(QString::number(_calculator.CalcMaterialWeight(checkDot(areaText).toDouble(), expence)) + " кг");
+    QLabel *weight = new QLabel(QString::number(_calculator.CalcMaterialWeight(CheckDot(areaText).toDouble(), expence)) + " кг");
     innerLayout->addWidget(weight);
 
-    QLabel *price = new QLabel(checkDot(priceText) + tr(" руб."));
+    QLabel *price = new QLabel(CheckDot(priceText) + tr(" руб."));
     innerLayout->addWidget(price);
 
-    QLabel *cost = new QLabel(QString::number(_calculator.CalcMaterialCost(checkDot(areaText).toDouble(), expence, checkDot(priceText).toDouble())) + " руб.");
+    QLabel *cost = new QLabel(QString::number(_calculator.CalcMaterialCost(CheckDot(areaText).toDouble(), expence, CheckDot(priceText).toDouble())));
     innerLayout->addWidget(cost);
+    innerLayout->setObjectName(cost->text());
     _primeCostLine->setText(QString::number(_calculator.GetPrimeCost()));
-    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(checkDot(indexText).toDouble())));
+    emit _indexLine->textChanged(_indexLine->text());
 
     QPushButton *btnDelete = new QPushButton("-");
     btnDelete->setObjectName(QString ("%1").arg(_layoutWidget->count()));
@@ -204,16 +218,26 @@ void Project::onBtnAddMaterials()
     _spacer->changeSize(_spacerWidth, _spacer->geometry().height() - _addinfLableHeight);
 }
 
-void Project::indexLineTextChanged(const QString& newKoeff)
+void Project::indexLineTextChanged(const QString& newIndex)
 {
-    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(newKoeff.toDouble())));
+    QString index = newIndex;
+    _totalCostLine->setText(QString::number(_calculator.GetTotalCost(CheckDot(index).toDouble())));
 }
 
 void Project::onDeleteButton()
 {
     auto currentRow = _layoutWidget->itemAt(sender()->objectName().toInt()-1);
+    QString materialCost = currentRow->layout()->objectName();
     while(!currentRow->layout()->isEmpty())
         delete currentRow->layout()->itemAt(0)->widget();
     _spacer->changeSize(_spacerWidth, _spacer->geometry().height() + _addinfLableHeight);
+    emit deleteMaterial(materialCost);
+    emit _indexLine->textChanged(_indexLine->text());
+}
+
+void Project::onSubtractMaterial(QString &cost)
+{
+    QString newPrice {QString::number(_calculator.SubtractMaterial(CheckDot(cost).toDouble()))};
+    _primeCostLine->setText(newPrice);
 }
 

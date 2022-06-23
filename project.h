@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QTextEdit>
 #include <QPushButton>
 #include <QLabel>
 #include <QStringList>
@@ -32,17 +33,19 @@ private:
     QComboBox *_typeBox, *_materialBox;
     QLineEdit *_areaLine, *_priceLine, *_costLine, *_indexLine, *_primeCostLine, *_totalCostLine;
     QLabel *_typeLabel, *_materialLabel, *_areaLabel,*_priceLable, *_costLabel;
-    QLabel *_indexLabel, *_primeCostLabel, *_totalCostLabel;
+    QLabel *_indexLabel, *_primeCostLabel, *_totalCostLabel, *_projectName, *_customerName, *customerPhone;
     QPushButton *_addNewMaterial;
+    QTextEdit* _textEdit;
     QChar _dot = '.';
     QChar _comma = ',';
 
-    void createTitleLine();
-    void createMaterialsLine();
-    void createResultLine();
-    void createClientLine();
-    QStringList chooseMaterials(const QString &type);
-    QString& checkDot(QString& text);
+    void CreateTitleLine();
+    void CreateMaterialsLine();
+    void CreateResultLine();
+    void CreateClientLine();
+    QStringList ChooseMaterials(const QString &type);
+    QString& CheckDot(QString& text) const;
+
 
     //размеры элементов
     const ushort _shift = 5;
@@ -60,9 +63,10 @@ private slots:
     void onBtnAddMaterials();
     void indexLineTextChanged(const QString &);
     void onDeleteButton();
+    void onSubtractMaterial(QString& cost);
 
 signals:
-
+    void deleteMaterial(QString& cost);
 };
 
 #endif // PROJECT_H
