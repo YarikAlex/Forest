@@ -6,7 +6,7 @@ addNewMaterial::addNewMaterial(DataBase *dataBase,QWidget *parent) :
     ui(new Ui::addNewMaterial)
 {
     ui->setupUi(this);
-    ui->ui_typeMaterial->addItems(dataBase->getType());
+    ui->ui_typeMaterial->addItems(dataBase->GetType());
 }
 
 addNewMaterial::~addNewMaterial()

@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
     _db = new DataBase();
-    _db->connectDataBase();
+    _db->ConnectDataBase();
 }
 
 MainWindow::~MainWindow()
@@ -50,10 +50,10 @@ void MainWindow::on_btn_addSupplier_clicked()
 
 void MainWindow::addNewMaterialDB(const QString& type, const QString& name, const QString& expense)
 {
-    _db->insertMaterialData(type, name, expense);
+    _db->InsertMaterialData(type, name, expense);
 }
 
 void MainWindow::addNewSupplierDB(std::vector<QString> &supplier)
 {
-    _db->insertSupplierData(supplier);
+    _db->InsertSupplierData(supplier);
 }

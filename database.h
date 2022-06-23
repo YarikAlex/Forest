@@ -18,12 +18,12 @@ public:
     explicit DataBase(QObject *parent = nullptr);
     ~DataBase();
 
-    void connectDataBase();
-    bool insertMaterialData(const QString &table, const QString &name, const QString &expense);
-    bool insertSupplierData(std::vector<QString> &supplier)const;
-    QStringList getType();
-    QStringList chooseMaterials(const QString& text);
-    double getExpense(const QString& table, const QString& material);
+    void ConnectDataBase();
+    bool InsertMaterialData(const QString &table, const QString &name, const QString &expense);
+    bool InsertSupplierData(std::vector<QString> &supplier)const;
+    QStringList GetType();
+    QStringList ChooseMaterials(const QString& text);
+    double GetExpense(const QString& table, const QString& material);
 
 private:
     QSqlDatabase _database;
@@ -33,11 +33,11 @@ private:
                                          {"bases", tr("Основания")},
                                          {"decorations", tr("Украшения")}};
 
-    bool createTable(const QString& table);
-    bool openDataBase();
-    bool restoreDatabase();
-    void closeDataBase();
-    QString findTypeTable(const QString &text);
+    bool CreateTable(const QString& table);
+    bool OpenDataBase();
+    bool RestoreDatabase();
+    void CloseDataBase();
+    QString FindTypeTable(const QString &text);
 
     QString _tableMossQuery = "CREATE TABLE moss ("
                               "id INTEGER PRIMARY KEY AUTOINCREMENT,"

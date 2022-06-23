@@ -5,22 +5,22 @@ DataBase::DataBase(QObject *parent) : QObject{parent} {}
 DataBase::~DataBase() {}
 
 //public metods
-void DataBase::connectDataBase()
+void DataBase::ConnectDataBase()
 {
     if(!QFile("../Databases/ForestDataBase.db").exists())
     {
-        this->restoreDatabase();
+        this->RestoreDatabase();
     }
     else
     {
-        this->openDataBase();
+        this->OpenDataBase();
     }
 }
 
-bool DataBase::insertMaterialData(const QString &table, const QString &name, const QString &expense)
+bool DataBase::InsertMaterialData(const QString &table, const QString &name, const QString &expense)
 {
     QSqlQuery query;
-    QString data = "INSERT INTO " + findTypeTable(table) + "(name, expenses) VALUES (:Name, :Expense)";
+    QString data = "INSERT INTO " + FindTypeTable(table) + "(name, expenses) VALUES (:Name, :Expense)";
     query.prepare(data);
     query.bindValue(":Name", name);
     query.bindValue(":Expense", expense.toDouble());
@@ -38,7 +38,7 @@ bool DataBase::insertMaterialData(const QString &table, const QString &name, con
     return false;
 }
 
-bool DataBase::insertSupplierData(std::vector<QString>& supplier) const
+bool DataBase::InsertSupplierData(std::vector<QString>& supplier) const
 {
     QSqlQuery query;
     QString data = "INSERT INTO suppliers (surname, name, phone, city, street, house, site)"
@@ -65,7 +65,7 @@ bool DataBase::insertSupplierData(std::vector<QString>& supplier) const
     return false;
 }
 
-QStringList DataBase::getType()
+QStringList DataBase::GetType()
 {
     QStringList types;
     for(auto &iter: _typeList)
@@ -75,9 +75,9 @@ QStringList DataBase::getType()
     return types;
 }
 
-QStringList DataBase::chooseMaterials(const QString &text)
+QStringList DataBase::ChooseMaterials(const QString &text)
 {
-    QSqlQuery query("SELECT name FROM " + findTypeTable(text));
+    QSqlQuery query("SELECT name FROM " + FindTypeTable(text));
     QStringList materialsList;
     while(query.next())
     {
@@ -87,9 +87,9 @@ QStringList DataBase::chooseMaterials(const QString &text)
     return materialsList;
 }
 
-double DataBase::getExpense(const QString &table, const QString &material)
+double DataBase::GetExpense(const QString &table, const QString &material)
 {
-    QSqlQuery query("SELECT expenses FROM " + findTypeTable(table) + " WHERE name = '" + material + "';");
+    QSqlQuery query("SELECT expenses FROM " + FindTypeTable(table) + " WHERE name = '" + material + "';");
     double result = 0;
     if(query.next())
         result = query.value(0).toDouble();
@@ -97,7 +97,7 @@ double DataBase::getExpense(const QString &table, const QString &material)
 }
 
 //private metods
-bool DataBase::createTable(const QString& table)
+bool DataBase::CreateTable(const QString& table)
 {
     QSqlQuery query;
     if(!query.exec(table))
@@ -114,7 +114,7 @@ bool DataBase::createTable(const QString& table)
     return false;
 }
 
-bool DataBase::openDataBase()
+bool DataBase::OpenDataBase()
 {
     _database = QSqlDatabase::addDatabase("QSQLITE");
     _database.setHostName("DataBase");
@@ -123,21 +123,21 @@ bool DataBase::openDataBase()
     else return false;
 }
 
-bool DataBase::restoreDatabase()
+bool DataBase::RestoreDatabase()
 {
-    if(this->openDataBase())
+    if(this->OpenDataBase())
     {
-        if(!this->createTable(_tableMossQuery) ||
-           !this->createTable(_tableStabilizedPlantsQuery) ||
-           !this->createTable(_tableArtificialPlantsQuery) ||
-           !this->createTable(_tableBasesQuery) ||
-           !this->createTable(_tableDecorationsQuery) ||
-           !this->createTable(_tableSuppliersQuery) ||
-           !this->createTable(_tableMossDeliveryQuery) ||
-           !this->createTable(_tableStabilizedPlantsDeliveryQuery) ||
-           !this->createTable(_tableArtificialPlantsDeliveryQuery) ||
-           !this->createTable(_tableBasesDeliveryQuery) ||
-           !this->createTable(_tableDecorationsDeliveryQuery))
+        if(!this->CreateTable(_tableMossQuery) ||
+           !this->CreateTable(_tableStabilizedPlantsQuery) ||
+           !this->CreateTable(_tableArtificialPlantsQuery) ||
+           !this->CreateTable(_tableBasesQuery) ||
+           !this->CreateTable(_tableDecorationsQuery) ||
+           !this->CreateTable(_tableSuppliersQuery) ||
+           !this->CreateTable(_tableMossDeliveryQuery) ||
+           !this->CreateTable(_tableStabilizedPlantsDeliveryQuery) ||
+           !this->CreateTable(_tableArtificialPlantsDeliveryQuery) ||
+           !this->CreateTable(_tableBasesDeliveryQuery) ||
+           !this->CreateTable(_tableDecorationsDeliveryQuery))
         {
             return false;
         }
@@ -149,12 +149,12 @@ bool DataBase::restoreDatabase()
     }
 }
 
-void DataBase::closeDataBase()
+void DataBase::CloseDataBase()
 {
     _database.close();
 }
 
-QString DataBase::findTypeTable(const QString& text)
+QString DataBase::FindTypeTable(const QString& text)
 {
     for(auto &iter: _typeList)
     {
