@@ -13,6 +13,11 @@ double Calculator::CalcMaterialCost(double area, double expence, double price)
     return CalcMaterialWeight(area, expence) * price;
 }
 
+double Calculator::SubtractMaterial(double cost)
+{
+    return _primeCost -= cost;
+}
+
 double Calculator::GetPrimeCost()
 {
     return _primeCost;
