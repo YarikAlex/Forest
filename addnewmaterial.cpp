@@ -16,7 +16,7 @@ addNewMaterial::~addNewMaterial()
 
 void addNewMaterial::on_addButton_clicked()
 {
-    emit getNewMaterial(ui->ui_typeMaterial->currentText(), ui->ui_materialName->text(), ui->ui_expenseMaterial->text());
+    emit getNewMaterial(ui->ui_typeMaterial->currentIndex() + 1, ui->ui_materialName->text(), ui->ui_expenseMaterial->text());
     this->close();
 }
 

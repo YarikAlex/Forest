@@ -17,7 +17,7 @@ public:
     ~addNewMaterial();
 
 signals:
-    void getNewMaterial(const QString& type, const QString& name, const QString& expenses);
+    void getNewMaterial(uint type, const QString& name, const QString& expenses);
 
 private slots:
     void on_addButton_clicked();
