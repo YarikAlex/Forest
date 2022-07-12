@@ -19,11 +19,11 @@ public:
     ~DataBase();
 
     void ConnectDataBase();
-    bool InsertMaterialData(const QString &table, const QString &name, const QString &expense);
+    bool InsertMaterialData(uint materialType, const QString &name, const QString &expense);
     bool InsertSupplierData(std::vector<QString> &supplier)const;
     QStringList GetType();
     QStringList ChooseMaterials(const QString& text);
-    double GetExpense(const QString& table, const QString& material);
+    double GetExpense(const QString& material);
 
 private:
     QSqlDatabase _database;
@@ -37,87 +37,37 @@ private:
     bool OpenDataBase();
     bool RestoreDatabase();
     void CloseDataBase();
-    QString FindTypeTable(const QString &text);
 
-    QString _tableMossQuery = "CREATE TABLE moss ("
-                              "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                              "name CHAR(50) NOT NULL,"
-                              "expenses DOUBLE NOT NULL);";
+    QString _tableMaterialTypesQuery = "CREATE TABLE materialTypes ("
+                                        "type_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
+                                        "type_name TEXT NOT NULL);";
 
-    QString _tableStabilizedPlantsQuery = "CREATE TABLE stabPlants ("
-                                          "id INTEGER PRIMARY KEY AUTOINCREMENT, "
-                                          "name CHAR(50) NOT NULL,"
-                                          "expenses DOUBLE NOT NULL);";
+    QString _tableMaterialsQuery = "CREATE TABLE materials ("
+                                          "material_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                                          "type_id INTEGER NOT NULL,"
+                                          "material_name TEXT NOT NULL,"
+                                          "expense REAL NOT NULL,"
+                                          "FOREIGN KEY (type_id) REFERENCES materialTypes (type_id));";
 
-    QString _tableArtificialPlantsQuery = "CREATE TABLE artPlants ("
-                                          "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                          "name CHAR(50) NOT NULL,"
-                                          "expenses DOUBLE NOT NULL);";
-
-    QString _tableBasesQuery = "CREATE TABLE bases ("
-                               "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                               "name CHAR(50) NOT NULL,"
-                               "expenses DOUBLE NOT NULL);";
-
-    QString _tableDecorationsQuery = "CREATE TABLE decorations ("
-                                     "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                     "name CHAR(50) NOT NULL,"
-                                     "expenses DOUBLE NOT NULL);";
+    QString _tableOrdersQuery = "CREATE TABLE orders ("
+                                "order_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                "material_id INTEGER NOT NULL,"
+                                "supplier_id INTEGER NOT NULL,"
+                                "date TEXT NOT NULL,"
+                                "count REAL NOT NULL,"
+                                "price REAL NOT NULL,"
+                                "FOREIGN KEY(supplier_id) REFERENCES suppliers(supplier_id),"
+                                "FOREIGN KEY(material_id) REFERENCES materials(material_id));";
 
     QString _tableSuppliersQuery = "CREATE TABLE suppliers ("
-                                   "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-                                   "surname CHAR(30) NOT NULL,"
-                                   "name CHAR(20) NOT NULL,"
-                                   "phone CHAR(20) NOT NULL,"
-                                   "city CHAR(20),"
-                                   "street CHAR(20),"
-                                   "house CHAR(20),"
-                                   "site CHAR(50));";
-
-    QString _tableMossDeliveryQuery = "CREATE TABLE mossDelivery ("
-                                      "id_moss INTEGER,"
-                                      "id_supp INTEGER,"
-                                      "price DOUBLE NOT NULL,"
-                                      "number INTEGER NOT NULL,"
-                                      "CONSTRAINT new_pk PRIMARY KEY (id_moss, id_supp),"
-                                      "FOREIGN KEY (id_moss) REFERENCES moss (id)"
-                                      "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
-
-    QString _tableStabilizedPlantsDeliveryQuery = "CREATE TABLE stabPlantsDelivery ("
-                                                  "id_stab INTEGER,"
-                                                  "id_supp INTEGER,"
-                                                  "price DOUBLE NOT NULL,"
-                                                  "number INTEGER NOT NULL,"
-                                                  "CONSTRAINT new_pk PRIMARY KEY (id_stab, id_supp),"
-                                                  "FOREIGN KEY (id_stab) REFERENCES stabPlants (id)"
-                                                  "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
-
-    QString _tableArtificialPlantsDeliveryQuery = "CREATE TABLE artPlantsDelivery ("
-                                                  "id_art INTEGER,"
-                                                  "id_supp INTEGER,"
-                                                  "price DOUBLE NOT NULL,"
-                                                  "number INTEGER NOT NULL,"
-                                                  "CONSTRAINT new_pk PRIMARY KEY (id_art, id_supp),"
-                                                  "FOREIGN KEY (id_art) REFERENCES artPlants (id)"
-                                                  "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
-
-    QString _tableBasesDeliveryQuery = "CREATE TABLE basesDelivery ("
-                                       "id_base INTEGER,"
-                                       "id_supp INTEGER,"
-                                       "price DOUBLE NOT NULL,"
-                                       "number INTEGER NOT NULL,"
-                                       "CONSTRAINT new_pk PRIMARY KEY (id_base, id_supp),"
-                                       "FOREIGN KEY (id_base) REFERENCES bases (id)"
-                                       "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
-
-    QString _tableDecorationsDeliveryQuery = "CREATE TABLE decorationsDelivery ("
-                                             "id_decor INTEGER,"
-                                             "id_supp INTEGER,"
-                                             "price DOUBLE NOT NULL,"
-                                             "number INTEGER NOT NULL,"
-                                             "CONSTRAINT new_pk PRIMARY KEY (id_decor, id_supp),"
-                                             "FOREIGN KEY (id_decor) REFERENCES decorations (id)"
-                                             "FOREIGN KEY (id_supp) REFERENCES suppliers (id));";
+                                   "supplier_id INTEGER PRIMARY KEY AUTOINCREMENT,"
+                                   "surname TEXT NOT NULL,"
+                                   "name TEXT NOT NULL,"
+                                   "phone TEXT NOT NULL,"
+                                   "city TEXT,"
+                                   "street TEXT,"
+                                   "house TEXT,"
+                                   "site TEXT);";
 };
 
 #endif // DATABASE_H

@@ -17,22 +17,23 @@ void DataBase::ConnectDataBase()
     }
 }
 
-bool DataBase::InsertMaterialData(const QString &table, const QString &name, const QString &expense)
+bool DataBase::InsertMaterialData(uint materialType, const QString &name, const QString &expense)
 {
     QSqlQuery query;
-    QString data = "INSERT INTO " + FindTypeTable(table) + "(name, expenses) VALUES (:Name, :Expense)";
+    QString data = "INSERT INTO materials (type_id, material_name, expense) VALUES (:Type, :Name, :Expense)";
     query.prepare(data);
+    query.bindValue(":Type", materialType);
     query.bindValue(":Name", name);
     query.bindValue(":Expense", expense.toDouble());
     if(!query.exec())
     {
-        qDebug() << "DataBase: error insert into table " << table;
+        qDebug() << "DataBase: error insert into table materials";
         qDebug() << query.lastError().text();
         return false;
     }
     else
     {
-        qDebug() << "DataBase: data into " << table << " successfully added.";
+        qDebug() << "DataBase: data into table materials successfully added.";
         return true;
     }
     return false;
@@ -67,29 +68,48 @@ bool DataBase::InsertSupplierData(std::vector<QString>& supplier) const
 
 QStringList DataBase::GetType()
 {
-    QStringList types;
-    for(auto &iter: _typeList)
+    QSqlQuery query("SELECT type_name "
+                    "FROM materialTypes;");
+    QStringList typesList;
+    if(query.exec())
     {
-        types.push_back(iter.second);
-    }
-    return types;
+        while(query.next())
+        {
+            QString name = query.value(0).toString();
+            typesList.push_back(name);
+        }
+     }
+    else
+        qDebug() << "DataBase: query in GetType in not exec";
+
+    return typesList;
 }
 
 QStringList DataBase::ChooseMaterials(const QString &text)
 {
-    QSqlQuery query("SELECT name FROM " + FindTypeTable(text));
+    QSqlQuery query("SELECT material_name, materialTypes.type_name "
+                    "FROM materials "
+                    "INNER JOIN materialTypes ON materialTypes.type_id = materials.type_id "
+                    "WHERE type_name = '" + text + "';");
     QStringList materialsList;
-    while(query.next())
+    if(query.exec())
     {
-        QString name = query.value(0).toString();
-        materialsList.push_back(name);
+        while(query.next())
+        {
+            QString name = query.value(0).toString();
+            materialsList.push_back(name);
+        }
     }
+    else
+        qDebug() << "DataBase: query in ChooseMaterials in not exec";
     return materialsList;
 }
 
-double DataBase::GetExpense(const QString &table, const QString &material)
+double DataBase::GetExpense(const QString &material)
 {
-    QSqlQuery query("SELECT expenses FROM " + FindTypeTable(table) + " WHERE name = '" + material + "';");
+    QSqlQuery query("SELECT expense "
+                    "FROM materials "
+                    "WHERE material_name = '" + material + "';");
     double result = 0;
     if(query.next())
         result = query.value(0).toDouble();
@@ -127,17 +147,10 @@ bool DataBase::RestoreDatabase()
 {
     if(this->OpenDataBase())
     {
-        if(!this->CreateTable(_tableMossQuery) ||
-           !this->CreateTable(_tableStabilizedPlantsQuery) ||
-           !this->CreateTable(_tableArtificialPlantsQuery) ||
-           !this->CreateTable(_tableBasesQuery) ||
-           !this->CreateTable(_tableDecorationsQuery) ||
-           !this->CreateTable(_tableSuppliersQuery) ||
-           !this->CreateTable(_tableMossDeliveryQuery) ||
-           !this->CreateTable(_tableStabilizedPlantsDeliveryQuery) ||
-           !this->CreateTable(_tableArtificialPlantsDeliveryQuery) ||
-           !this->CreateTable(_tableBasesDeliveryQuery) ||
-           !this->CreateTable(_tableDecorationsDeliveryQuery))
+        if(!this->CreateTable(_tableMaterialTypesQuery) ||
+           !this->CreateTable(_tableMaterialsQuery) ||
+           !this->CreateTable(_tableOrdersQuery) ||
+           !this->CreateTable(_tableSuppliersQuery))
         {
             return false;
         }
@@ -152,14 +165,4 @@ bool DataBase::RestoreDatabase()
 void DataBase::CloseDataBase()
 {
     _database.close();
-}
-
-QString DataBase::FindTypeTable(const QString& text)
-{
-    for(auto &iter: _typeList)
-    {
-        if(text == iter.second)
-            return iter.first;
-    }
-    return QString {};
 }
