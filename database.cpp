@@ -68,7 +68,7 @@ bool DataBase::insertSupplierData(std::vector<QString>& supplier) const
 QStringList DataBase::getType()
 {
     QStringList types;
-    for(auto iter: _typeList)
+    for(auto &iter: _typeList)
     {
         types.push_back(iter.second);
     }
@@ -147,7 +147,7 @@ void DataBase::closeDataBase()
 
 QString DataBase::findTypeTable(const QString& text)
 {
-    for(auto iter: _typeList)
+    for(auto &iter: _typeList)
     {
         if(text == iter.second)
             return iter.first;

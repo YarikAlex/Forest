@@ -3,6 +3,7 @@
 #include "project.h"
 #include "supplier.h"
 #include "addnewmaterial.h"
+#include "tablewindow.h"
 #include <QMenu>
 #include <QSpacerItem>
 #include <QToolBar>
@@ -15,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    createFileMenu();
-    createEditMenu();
-    createTableMenu();
+    CreateFileMenu();
+    CreateEditMenu();
+    CreateTableMenu();
 
     _db = new DataBase();
     _db->connectDataBase();
@@ -76,19 +77,20 @@ void MainWindow::on_addMaterial()
 {
     addNewMaterial *window = new addNewMaterial(_db, this);
     window->show();
-    connect(window, &addNewMaterial::getNewMaterial, this, &MainWindow::addNewMaterialDB);
+    connect(window, &addNewMaterial::getNewMaterial, this, &MainWindow::AddNewMaterialDB);
 }
 
 void MainWindow::on_addSupplier()
 {
     Supplier *supplierForm = new Supplier(this);
     supplierForm->show();
-    connect(supplierForm, &Supplier::getSupplier, this, &MainWindow::addNewSupplierDB);
+    connect(supplierForm, &Supplier::getSupplier, this, &MainWindow::AddNewSupplierDB);
 }
 
 void MainWindow::on_materialTable()
 {
-
+    tableWindow *newTable = new tableWindow(_db, this);
+    newTable->show();
 }
 
 void MainWindow::on_supplierTable()
@@ -96,12 +98,12 @@ void MainWindow::on_supplierTable()
 
 }
 
-void MainWindow::addNewMaterialDB(const QString& type, const QString& name, const QString& expense)
+void MainWindow::AddNewMaterialDB(const QString& type, const QString& name, const QString& expense)
 {
     _db->insertMaterialData(type, name, expense);
 }
 
-void MainWindow::addNewSupplierDB(std::vector<QString> &supplier)
+void MainWindow::AddNewSupplierDB(std::vector<QString> &supplier)
 {
     _db->insertSupplierData(supplier);
 }
@@ -111,7 +113,7 @@ void MainWindow::on_tabCloseRequested(int index)
     ui->tabWidget->removeTab(index);
 }
 
-void MainWindow::createFileMenu()
+void MainWindow::CreateFileMenu()
 {
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
     QToolBar *fileTool = new QToolBar(tr("File"), this);
@@ -150,7 +152,7 @@ void MainWindow::createFileMenu()
     this->addToolBar(fileTool);
 }
 
-void MainWindow::createEditMenu()
+void MainWindow::CreateEditMenu()
 {
     QMenu *editMenu = menuBar()->addMenu(tr("&Edit"));
     QToolBar *editTool = new QToolBar(tr("Edit"), this);
@@ -172,7 +174,7 @@ void MainWindow::createEditMenu()
     this->addToolBar(editTool);
 }
 
-void MainWindow::createTableMenu()
+void MainWindow::CreateTableMenu()
 {
     QMenu *tablesMenu = menuBar()->addMenu(tr("&Tables"));
 

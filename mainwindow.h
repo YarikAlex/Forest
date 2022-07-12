@@ -24,8 +24,8 @@ private slots:
     void on_saveProject();
     void on_Quit();
     void on_addMaterial();
-    void addNewMaterialDB(const QString& type, const QString& name, const QString& expense);
-    void addNewSupplierDB(std::vector<QString>&);
+    void AddNewMaterialDB(const QString& type, const QString& name, const QString& expense);
+    void AddNewSupplierDB(std::vector<QString>&);
     void on_addSupplier();
     void on_materialTable();
     void on_supplierTable();
@@ -34,8 +34,9 @@ private slots:
 private:
     Ui::MainWindow  *ui;
     DataBase        *_db;
-    void createFileMenu();
-    void createEditMenu();
-    void createTableMenu();
+
+    void CreateFileMenu();
+    void CreateEditMenu();
+    void CreateTableMenu();
 };
 #endif // MAINWINDOW_H
