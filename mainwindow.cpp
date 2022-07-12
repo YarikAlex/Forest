@@ -48,7 +48,7 @@ void MainWindow::on_btn_addSupplier_clicked()
     connect(supplierForm, &Supplier::getSupplier, this, &MainWindow::addNewSupplierDB);
 }
 
-void MainWindow::addNewMaterialDB(const QString& type, const QString& name, const QString& expense)
+void MainWindow::addNewMaterialDB(uint type, const QString& name, const QString& expense)
 {
     _db->InsertMaterialData(type, name, expense);
 }

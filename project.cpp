@@ -178,7 +178,7 @@ void Project::typeBoxCurrentTextChanged(const QString &text)
 void Project::onBtnAddMaterials()
 {
     //Запрос в БД на получение расхода
-    double expence = _dataBase->GetExpense(_typeBox->currentText(), _materialBox->currentText());
+    double expence = _dataBase->GetExpense(_materialBox->currentText());
     QString areaText = _areaLine->text();
     QString priceText = _priceLine->text();
     //QString indexText = _indexLine->text();
