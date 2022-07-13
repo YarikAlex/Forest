@@ -3,6 +3,7 @@
 #include "project.h"
 #include "addnewmaterial.h"
 #include "supplier.h"
+#include "orderstable.h"
 #include <QMenuBar>
 #include <QSpacerItem>
 
