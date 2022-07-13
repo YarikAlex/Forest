@@ -159,7 +159,7 @@ void Project::CreateClientLine()
 
 QStringList Project::ChooseMaterials(const QString &type)
 {
-    return _dataBase->ChooseMaterials(type);
+    return _dataBase->GetMaterials(type);
 }
 
 QString& Project::CheckDot(QString &text) const

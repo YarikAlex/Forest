@@ -5,6 +5,7 @@
 #include <QSqlDatabase>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QStandardItemModel>
 #include <QDebug>
 #include <QFile>
 #include <vector>
@@ -22,11 +23,13 @@ public:
     bool InsertMaterialData(uint materialType, const QString &name, const QString &expense);
     bool InsertSupplierData(std::vector<QString> &supplier)const;
     QStringList GetType();
-    QStringList ChooseMaterials(const QString& text);
+    QStringList GetMaterials(const QString& text);
     double GetExpense(const QString& material);
+    QStandardItemModel* GetOrders();
 
 private:
     QSqlDatabase _database;
+    std::vector<QString> _ordersTableHeaders = {tr("Date"), tr("Surname"), tr("Name"), tr("Material"), tr("Count"), tr("Price")};
     std::vector<std::pair<QString, QString>> _typeList {{"moss", tr("Мхи")},
                                          {"stabPlants", tr("Стабилизированные")},
                                          {"artPlants", tr("Искуственные")},
@@ -37,6 +40,7 @@ private:
     bool OpenDataBase();
     bool RestoreDatabase();
     void CloseDataBase();
+
 
     QString _tableMaterialTypesQuery = "CREATE TABLE materialTypes ("
                                         "type_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"

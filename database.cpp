@@ -1,4 +1,5 @@
 #include "database.h"
+#include <QSqlRecord>
 
 DataBase::DataBase(QObject *parent) : QObject{parent} {}
 
@@ -85,7 +86,7 @@ QStringList DataBase::GetType()
     return typesList;
 }
 
-QStringList DataBase::ChooseMaterials(const QString &text)
+QStringList DataBase::GetMaterials(const QString &text)
 {
     QSqlQuery query("SELECT material_name, materialTypes.type_name "
                     "FROM materials "
@@ -101,7 +102,7 @@ QStringList DataBase::ChooseMaterials(const QString &text)
         }
     }
     else
-        qDebug() << "DataBase: query in ChooseMaterials in not exec";
+        qDebug() << "DataBase: query in ChooseMaterials is not exec";
     return materialsList;
 }
 
@@ -114,6 +115,40 @@ double DataBase::GetExpense(const QString &material)
     if(query.next())
         result = query.value(0).toDouble();
     return result;
+}
+
+QStandardItemModel *DataBase::GetOrders()
+{
+    QSqlQuery query("SELECT date, surname, name, material_name, count, price "
+                    "FROM orders "
+                    "JOIN materials ON orders.material_id = materials.material_id "
+                    "JOIN suppliers ON orders.supplier_id = suppliers.supplier_id;");
+
+    if(query.exec())
+    {
+        QStandardItemModel* model = new QStandardItemModel(this);
+        while(query.next())
+        {
+            QList<QStandardItem*> list;
+            for(int iter = 0; iter < query.record().count(); ++iter)
+            {
+                list.push_back(new QStandardItem(QString(query.value(iter).toString())));
+            }
+            model->appendRow(list);
+        }
+
+        for(int header = 0; header < model->columnCount(); ++header)
+        {
+            model->setHeaderData(header, Qt::Horizontal, _ordersTableHeaders[header]);
+        }
+
+        return model;
+    }
+    else
+    {
+        qDebug() << "DataBase: query in GetOrders is not exec";
+        return nullptr;
+    }
 }
 
 //private metods
