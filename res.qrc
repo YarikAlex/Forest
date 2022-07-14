@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>images/newMaterialIcon.png</file>
+        <file>images/newSupplierIcon.png</file>
+        <file>images/newProjectIcon.png</file>
+        <file>images/openProjectIcon.png</file>
+        <file>images/saveProjectIcon.png</file>
+    </qresource>
+</RCC>

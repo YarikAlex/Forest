@@ -15,7 +15,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     project.cpp \
-    supplier.cpp
+    supplier.cpp \
+    tablewindow.cpp
 
 HEADERS += \
     addnewmaterial.h \
@@ -23,14 +24,21 @@ HEADERS += \
     database.h \
     mainwindow.h \
     project.h \
-    supplier.h
+    supplier.h \
+    tablewindow.h
 
 FORMS += \
     addnewmaterial.ui \
     mainwindow.ui \
-    supplier.ui
+    supplier.ui \
+    tablewindow.ui
+
+win32: RC_FILE = file.rc
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+RESOURCES += \
+    res.qrc
