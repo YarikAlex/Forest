@@ -29,12 +29,15 @@ private slots:
     void on_addSupplier();
     void on_materialTable();
     void on_supplierTable();
+    void on_orderTable();
     void on_tabCloseRequested(int index);
 
 private:
     Ui::MainWindow  *ui;
     DataBase        *_db;
-
+    std::vector<QString> materialTableHeaders = {tr("ID"), tr("Type"), tr("Material"), tr("Expense")};
+    std::vector<QString> supplierTableHeaders = {tr("ID"), tr("Surname"), tr("Name"), tr("Phone"),
+                                                 tr("City"), tr("Street"), tr("House"), tr("Site")};
     void CreateFileMenu();
     void CreateEditMenu();
     void CreateTableMenu();

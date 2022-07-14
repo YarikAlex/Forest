@@ -89,11 +89,17 @@ void MainWindow::on_addSupplier()
 
 void MainWindow::on_materialTable()
 {
-    tableWindow *newTable = new tableWindow(_db, this);
+    tableWindow *newTable = new tableWindow("materials", materialTableHeaders, this);
     newTable->show();
 }
 
 void MainWindow::on_supplierTable()
+{
+    tableWindow *newTable = new tableWindow("suppliers", supplierTableHeaders, this);
+    newTable->show();
+}
+
+void MainWindow::on_orderTable()
 {
 
 }
@@ -187,4 +193,9 @@ void MainWindow::CreateTableMenu()
     supplierTable->setStatusTip(tr("Show all suppliers"));
     connect(supplierTable, &QAction::triggered, this, &MainWindow::on_supplierTable);
     tablesMenu->addAction(supplierTable);
+
+    QAction *orderTable = new QAction(tr("List of orders"));
+    orderTable->setStatusTip(tr("Show all orders"));
+    connect(orderTable, &QAction::triggered, this, &MainWindow::on_orderTable);
+    tablesMenu->addAction(orderTable);
 }
