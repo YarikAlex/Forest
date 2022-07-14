@@ -27,7 +27,7 @@ tableWindow::tableWindow(const QString &tableName, const std::vector<QString> &h
 
 tableWindow::tableWindow(DataBase *db)
 {
-    //ui->tableView->setModel(db->getOrders);
+   // ui->tableView->setModel(db.GetOrders());
 }
 
 tableWindow::~tableWindow()

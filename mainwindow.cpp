@@ -102,10 +102,11 @@ void MainWindow::on_supplierTable()
 
 void MainWindow::on_orderTable()
 {
-
+    tableWindow *table = new tableWindow(_db);
+    table->show();
 }
 
-void MainWindow::addNewMaterialDB(uint type, const QString& name, const QString& expense)
+void MainWindow::AddNewMaterialDB(uint type, const QString& name, const QString& expense)
 {
     _db->InsertMaterialData(type, name, expense);
 }

@@ -24,7 +24,7 @@ private slots:
     void on_saveProject();
     void on_Quit();
     void on_addMaterial();
-    void AddNewMaterialDB(const QString& type, const QString& name, const QString& expense);
+    void AddNewMaterialDB(uint type, const QString& name, const QString& expense);
     void AddNewSupplierDB(std::vector<QString>&);
     void on_addSupplier();
     void on_materialTable();
